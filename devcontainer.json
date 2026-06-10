@@ -1,4 +1,0 @@
-{
-  "name": "ASP.NET Core 8",
-  "image": "mcr.microsoft.com/devcontainers/dotnet:1-8.0"
-}
