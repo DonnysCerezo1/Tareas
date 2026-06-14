@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "name": "BusesEscolares",
   "image": "mcr.microsoft.com/devcontainers/dotnet:1-8.0",
   "customizations": {
@@ -6,4 +7,8 @@
       "backend": "Rider"
     }
   }
+=======
+  "name": "ASP.NET Core 8",
+  "image": "mcr.microsoft.com/devcontainers/dotnet:1-8.0"
+>>>>>>> c84baed5f871792d5b8cfc962e2196edd4d8f929
 }
