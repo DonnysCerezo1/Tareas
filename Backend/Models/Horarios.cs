@@ -1,15 +1,19 @@
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Backend.Models;
 
 public class Horarios
 {
+    [Key]
     public int IDHorarios { get; set; }
-    
-    [Column ("Chofer")]
+
+    [Column("Chofer")]
     public int ChoferId { get; set; }
+
     [ForeignKey(nameof(ChoferId))]
-    public ChoferesAutorizados? Chofer { get; set; }
-    
-    public ICollection<Reservas> Reservas { get; set; } = new List<Reservas>();
+    public ChoferesAutorizados Chofer { get; set; } = null!;
+
+    public ICollection<Reservas> Reservas { get; set; }
+        = new List<Reservas>();
 }
