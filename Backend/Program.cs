@@ -47,7 +47,15 @@ builder.Services.AddDbContext<AppDbContext>(options =>
         new MySqlServerVersion(new Version(10, 11, 0))
     );
 });
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("Frontend", policy =>
+    {
+        policy.WithOrigins("https://donjortech.com")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
 
 var app = builder.Build();
 
@@ -67,7 +75,7 @@ if (app.Environment.IsDevelopment())
 
 
 app.UseRouting();
-
+app.UseCors("publico");
 app.MapControllers();
 
 
