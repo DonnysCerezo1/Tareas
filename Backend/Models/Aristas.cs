@@ -5,23 +5,36 @@ namespace Backend.Models;
 
 public class Aristas
 {
-    [Key] public int IDAristas { get; set; }
+    [Key]
+    public int IDAristas { get; set; }
 
-    [Column("Origen")] public int OrigenId { get; set; }
+    public int Origen { get; set; }
 
-    [ForeignKey(nameof(OrigenId))] public Nodos NodoOrigen { get; set; } = null!;
-
-    [Column("Destino")] public int DestinoId { get; set; }
-
-    [ForeignKey(nameof(DestinoId))] public Nodos NodoDestino { get; set; } = null!;
-
+    public int Destino { get; set; }
+    
     public TimeSpan Tiempo { get; set; }
-
+    
     public double Costo { get; set; }
-
-    [Column("Trafico")] public int TraficoId { get; set; }
-
-    [ForeignKey(nameof(TraficoId))] public RutasDisponibles RutaTrafico { get; set; } = null!;
+    
+    public int Trafico { get; set; } 
 
     public double Distancia { get; set; }
+    
+    public int? Ruta { get; set; }
+
+
+    // Relaciones
+
+    [ForeignKey("Origen")]
+    public Nodos NodoOrigen { get; set; } = null!;
+
+
+    [ForeignKey("Destino")]
+    public Nodos NodoDestino { get; set; } = null!;
+
+
+    [ForeignKey("Ruta")]
+    public RutasDisponibles? RutaDisponible { get; set; } = null!;
+    public ICollection<RutaAristas> RutaAristas { get; set; } = new List<RutaAristas>();
+    
 }

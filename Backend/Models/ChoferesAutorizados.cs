@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Backend.Models;
 
@@ -20,7 +21,8 @@ public class ChoferesAutorizados
 
     public ICollection<Reservas> Reservas { get; set; }
         = new List<Reservas>();
-
+    
+    [JsonIgnore]
     public ICollection<Vehiculos> Vehiculos { get; set; }
         = new List<Vehiculos>();
 

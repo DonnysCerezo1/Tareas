@@ -4,69 +4,99 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Controllers;
 
+
 [ApiController]
 [Route("api/[controller]")]
-public class NodoController : ControllerBase
+public class NodosController : ControllerBase
 {
-    private readonly INodoService _nodoService;
 
-    public NodoController(INodoService nodoService)
+    private readonly INodoService _service;
+
+
+
+    public NodosController(INodoService service)
     {
-        _nodoService = nodoService;
+        _service = service;
     }
+
+
+
+
 
     [HttpGet]
-    public async Task<ActionResult<List<Nodos>>> GetAll()
+    public async Task<IActionResult> GetAll()
     {
-        return Ok(await _nodoService.GetAll());
+        return Ok(await _service.GetAll());
     }
 
-    [HttpGet("{id}")]
-    public async Task<ActionResult<Nodos>> GetById(int id)
-    {
-        var nodo = await _nodoService.GetById(id);
 
-        if (nodo == null)
+
+
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(int id)
+    {
+
+        var nodo = await _service.GetById(id);
+
+
+        if(nodo == null)
             return NotFound();
+
 
         return Ok(nodo);
     }
 
-    [HttpPost]
-    public async Task<ActionResult<Nodos>> Create(Nodos nodo)
-    {
-        var nuevo = await _nodoService.Create(nodo);
 
-        return CreatedAtAction(
-            nameof(GetById),
-            new { id = nuevo.IDNodo },
-            nuevo
-        );
+
+
+
+    [HttpPost]
+    public async Task<IActionResult> Create(Nodos nodo)
+    {
+
+        var result = await _service.Create(nodo);
+
+
+        return Ok(result);
     }
 
+
+
+
+
     [HttpPut("{id}")]
-    public async Task<ActionResult<Nodos>> Update(
+    public async Task<IActionResult> Update(
         int id,
         Nodos nodo)
     {
-        var actualizado =
-            await _nodoService.Update(id, nodo);
 
-        if (actualizado == null)
+        var result = await _service.Update(id, nodo);
+
+
+        if(!result)
             return NotFound();
 
-        return Ok(actualizado);
+
+        return NoContent();
     }
+
+
+
+
 
     [HttpDelete("{id}")]
-    public async Task<ActionResult<Nodos>> Delete(int id)
+    public async Task<IActionResult> Delete(int id)
     {
-        var eliminado =
-            await _nodoService.Delete(id);
 
-        if (eliminado == null)
+        var result = await _service.Delete(id);
+
+
+        if(!result)
             return NotFound();
 
-        return Ok(eliminado);
+
+        return NoContent();
     }
+
 }

@@ -10,11 +10,16 @@ public class RutasDisponibles
 
     public string Recorrido { get; set; } = string.Empty;
 
+    public string Tipo { get; set; } = string.Empty;
+
     public int Parada { get; set; }
 
     public double Costo { get; set; }
 
     public TimeSpan Tiempo { get; set; }
+
+    public string Trafico { get; set; } = string.Empty;
+
 
     [Column("Chofer")]
     public int ChoferId { get; set; }
@@ -22,15 +27,11 @@ public class RutasDisponibles
     [ForeignKey(nameof(ChoferId))]
     public ChoferesAutorizados Chofer { get; set; } = null!;
 
-    public ICollection<Aristas> Traficos { get; set; }
-        = new List<Aristas>();
 
-    public ICollection<HistorialViajes> Rutas { get; set; }
-        = new List<HistorialViajes>();
+    public ICollection<Aristas> Aristas { get; set; } = new List<Aristas>();
 
-    public ICollection<HistorialViajes> Recorridos { get; set; }
-        = new List<HistorialViajes>();
-
-    public ICollection<Reservas> Ruta { get; set; }
-        = new List<Reservas>();
+    public ICollection<RutaAristas> RutaAristas { get; set; } 
+        = new List<RutaAristas>();
+    public ICollection<HistorialViajes> HistorialViajes { get; set; }
+        = new List<HistorialViajes>();  
 }

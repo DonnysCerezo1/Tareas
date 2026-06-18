@@ -13,7 +13,7 @@ public class Vehiculos
     public string PlacaVehiculo { get; set; } = string.Empty;
 
     public int CapacidadVehiculo { get; set; }
-
+    
     [Column("ChoferAsignado")]
     public int ChoferAsignadoId { get; set; }
 

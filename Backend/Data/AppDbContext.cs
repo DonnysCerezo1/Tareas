@@ -5,10 +5,12 @@ namespace Backend.Data;
 
 public class AppDbContext : DbContext
 {
+
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)
     {
     }
+
 
     public DbSet<Aristas> Aristas { get; set; } = null!;
     public DbSet<CalificacionServicio> CalificacionServicio { get; set; } = null!;
@@ -17,90 +19,83 @@ public class AppDbContext : DbContext
     public DbSet<HistorialViajes> HistorialViajes { get; set; } = null!;
     public DbSet<Horarios> Horarios { get; set; } = null!;
     public DbSet<Nodos> Nodos { get; set; } = null!;
-    public DbSet<Reservas> Reservas { get; set; } = null!;
     public DbSet<RutasDisponibles> RutasDisponibles { get; set; } = null!;
     public DbSet<Vehiculos> Vehiculos { get; set; } = null!;
+    public DbSet<Usuarios> Usuarios { get; set; } = null!;
+    public DbSet<Reservas> Reservas { get; set; } = null!;
+    public DbSet<RutaAristas> RutaAristas { get; set; } = null!;
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+
         // ==========================
-        // ARISTAS -> NODOS
+        // ARISTAS
         // ==========================
+
+        modelBuilder.Entity<Aristas>()
+            .HasKey(a => a.IDAristas);
+
+        modelBuilder.Entity<Reservas>()
+            .Property(r => r.Estado)
+            .HasConversion<string>();
+        // Arista -> Nodo Origen
 
         modelBuilder.Entity<Aristas>()
             .HasOne(a => a.NodoOrigen)
             .WithMany(n => n.Origen)
-            .HasForeignKey(a => a.OrigenId)
+            .HasForeignKey(a => a.Origen)
             .OnDelete(DeleteBehavior.Restrict);
+
+
+
+        // Arista -> Nodo Destino
 
         modelBuilder.Entity<Aristas>()
             .HasOne(a => a.NodoDestino)
             .WithMany(n => n.Destino)
-            .HasForeignKey(a => a.DestinoId)
+            .HasForeignKey(a => a.Destino)
             .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder.Entity<Aristas>()
-            .HasOne(a => a.RutaTrafico)
-            .WithMany(r => r.Traficos)
-            .HasForeignKey(a => a.TraficoId)
-            .OnDelete(DeleteBehavior.Restrict);
+
 
         // ==========================
-        // HISTORIAL VIAJES
+        // RUTA ARISTAS (TABLA INTERMEDIA)
         // ==========================
 
-        modelBuilder.Entity<HistorialViajes>()
-            .HasOne(h => h.Estudiante)
-            .WithMany(e => e.HistorialViajes)
-            .HasForeignKey(h => h.EstudianteId)
+        modelBuilder.Entity<RutaAristas>()
+            .HasKey(ra => ra.ID);
+
+
+        modelBuilder.Entity<RutaAristas>()
+            .HasOne(ra => ra.Ruta)
+            .WithMany(r => r.RutaAristas)
+            .HasForeignKey(ra => ra.RutaId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder.Entity<HistorialViajes>()
+
+        modelBuilder.Entity<RutaAristas>()
+            .HasOne(ra => ra.Arista)
+            .WithMany(a => a.RutaAristas)
+            .HasForeignKey(ra => ra.AristaId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+
+
+        // ==========================
+        // HORARIOS -> CHOFER
+        // ==========================
+        
+        modelBuilder.Entity<Horarios>()
             .HasOne(h => h.Ruta)
-            .WithMany(r => r.Rutas)
+            .WithMany()
             .HasForeignKey(h => h.RutaId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder.Entity<HistorialViajes>()
-            .HasOne(h => h.Recorrido)
-            .WithMany(r => r.Recorridos)
-            .HasForeignKey(h => h.RecorridoId)
-            .OnDelete(DeleteBehavior.Restrict);
+
 
         // ==========================
-        // RESERVAS
-        // ==========================
-
-        modelBuilder.Entity<Reservas>()
-            .HasOne(r => r.Ruta)
-            .WithMany(rd => rd.Ruta)
-            .HasForeignKey(r => r.RutaId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        modelBuilder.Entity<Reservas>()
-            .HasOne(r => r.Horario)
-            .WithMany(h => h.Reservas)
-            .HasForeignKey(r => r.HorarioId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        modelBuilder.Entity<Reservas>()
-            .HasOne(r => r.Chofer)
-            .WithMany(c => c.Reservas)
-            .HasForeignKey(r => r.ChoferId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        // ==========================
-        // HORARIOS
-        // ==========================
-
-        modelBuilder.Entity<Horarios>()
-            .HasOne(h => h.Chofer)
-            .WithMany(c => c.Horarios)
-            .HasForeignKey(h => h.ChoferId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        // ==========================
-        // VEHICULOS
+        // VEHICULOS -> CHOFER
         // ==========================
 
         modelBuilder.Entity<Vehiculos>()
@@ -109,8 +104,10 @@ public class AppDbContext : DbContext
             .HasForeignKey(v => v.ChoferAsignadoId)
             .OnDelete(DeleteBehavior.Restrict);
 
+
+
         // ==========================
-        // RUTAS DISPONIBLES
+        // RUTAS -> CHOFER
         // ==========================
 
         modelBuilder.Entity<RutasDisponibles>()
@@ -119,21 +116,19 @@ public class AppDbContext : DbContext
             .HasForeignKey(r => r.ChoferId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        // ==========================
-        // CALIFICACIONES
-        // ==========================
 
-        modelBuilder.Entity<CalificacionServicio>()
-            .HasOne(c => c.Reserva)
-            .WithMany(r => r.Calificaciones)
-            .HasForeignKey(c => c.ReservaId)
-            .OnDelete(DeleteBehavior.Restrict);
+
+        // ==========================
+        // CALIFICACIONES -> ESTUDIANTE
+        // ==========================
 
         modelBuilder.Entity<CalificacionServicio>()
             .HasOne(c => c.Estudiante)
             .WithMany(e => e.CalificacionServicio)
             .HasForeignKey(c => c.EstudianteId)
             .OnDelete(DeleteBehavior.Restrict);
+
+
 
         base.OnModelCreating(modelBuilder);
     }

@@ -8,5 +8,5 @@ public interface IAristaService
     Task<Aristas?> GetById(int id);
     Task<Aristas> Create(Aristas aristas);
     Task<Aristas?> Update(int id, Aristas aristas);
-    Task<Aristas> Delete(int id);
+    Task<Aristas?> Delete(int id);
 }

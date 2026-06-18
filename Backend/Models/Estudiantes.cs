@@ -17,4 +17,7 @@ public class Estudiantes
 
     public ICollection<CalificacionServicio> CalificacionServicio { get; set; }
         = new List<CalificacionServicio>();
+    
+    public ICollection<Reservas> Reservas { get; set; }
+        = new List<Reservas>();
 }
