@@ -1,0 +1,54 @@
+@page "/HistorialViajes"
+
+@using Frontend.Models
+@using Frontend.Services
+
+@inject ReservasService reservasService
+
+<h3>Historial de Viajes</h3>
+
+@if (reservas == null)
+{
+    <p>Cargando...</p>
+}
+else
+{
+    <table class="table">
+
+        <thead>
+        <tr>
+            <th>Ruta</th>
+            <th>Chofer</th>
+            <th>Fecha</th>
+            <th>Estado</th>
+        </tr>
+        </thead>
+
+        <tbody>
+
+        @foreach (var reserva in reservas)
+        {
+            <tr>
+                <td>@reserva.Recorrido</td>
+                <td>@reserva.NombreChofer</td>
+                <td>@reserva.Fecha</td>
+                <td>@reserva.Estado</td>
+            </tr>
+        }
+
+        </tbody>
+
+    </table>
+}
+
+@code {
+
+    private List<ReservaDTO>? reservas;
+
+    protected override async Task OnInitializedAsync()
+    {
+        reservas = await reservasService.GetAll();
+    }
+    
+
+}

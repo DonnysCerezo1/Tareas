@@ -29,7 +29,8 @@ builder.Services.AddScoped<IReservasService, ReservasService>();
 builder.Services.AddScoped<IHistorialViajesService, HistorialViajesService>();
 builder.Services.AddScoped<ICalificacionServicioService, CalificacionServicioService>();
 builder.Services.AddScoped<IHorariosService, HorariosService>();
-
+builder.Services.AddScoped<LoginService>();
+builder.Services.AddScoped<SessionService>();
 
 var connectionString =
     builder.Configuration.GetConnectionString("DefaultConnection");

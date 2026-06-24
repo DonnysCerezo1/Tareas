@@ -1,0 +1,92 @@
+@page "/RutasDisponibles"
+
+@using Frontend.Models
+@using Frontend.Services
+@using ParadaMapaDTO = Backend.DTO.ParadaMapaDTO
+
+@inject RutasDisponiblesService rutasService
+@inject IJSRuntime JS
+
+@rendermode InteractiveServer
+
+
+<h3>Rutas disponibles</h3>
+
+
+@if(rutas == null)
+{
+    <p>Cargando...</p>
+}
+else
+{
+    foreach(var ruta in rutas)
+    {
+        <div class="mb-2">
+
+            <span>
+                @ruta.Recorrido
+            </span>
+
+
+            <button class="btn btn-primary"
+                    @onclick="() => VerRuta(ruta)">
+                Ver mapa
+            </button>
+
+        </div>
+    }
+}
+
+
+<hr />
+
+
+<div id="mapa"
+     style="
+     height:600px;
+     width:100%;">
+</div>
+
+
+
+@code {
+
+    List<Frontend.Models.RutasDisponibles>? rutas;
+
+    List<ParadaMapaDTO> paradas = new();
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        rutas = await rutasService.GetAll();
+    }
+
+
+
+    private async Task VerRuta(
+        Frontend.Models.RutasDisponibles ruta)
+    {
+
+        paradas =
+            await rutasService.GetParadasRuta(
+                ruta.IDRuta
+            );
+
+
+        await InvokeAsync(
+            StateHasChanged
+        );
+
+
+        await Task.Delay(300);
+
+
+        await JS.InvokeVoidAsync(
+            "crearMapa",
+            paradas
+        );
+
+    }
+
+}

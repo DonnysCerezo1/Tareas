@@ -1,0 +1,153 @@
+@page "/Estudiante"
+@rendermode InteractiveServer
+@using Frontend.Services
+
+@inject EstudianteService Service
+
+<h3>Estudiantes</h3>
+
+
+<button class="btn btn-primary mb-3" @onclick="Nuevo">
+    Nuevo
+</button>
+
+
+@if (mostrarFormulario)
+{
+    <div class="card p-3 mb-3">
+
+        <h4>Nuevo Estudiante</h4>
+
+
+        <div class="mb-2">
+            <label>Nombre</label>
+            <input class="form-control" @bind="nuevoEstudiante.NombreEst" />
+        </div>
+
+
+        <div class="mb-2">
+            <label>Cédula</label>
+            <input class="form-control" @bind="nuevoEstudiante.CedulaEst" />
+        </div>
+
+
+        <div class="mb-2">
+            <label>Correo</label>
+            <input class="form-control" @bind="nuevoEstudiante.CorreoEst" />
+        </div>
+
+
+        <div class="mb-2">
+            <label>Edad</label>
+            <input type="number" class="form-control" @bind="nuevoEstudiante.EdadEst" />
+        </div>
+
+
+        <div class="mb-2">
+            <label>Teléfono</label>
+            <input class="form-control" @bind="nuevoEstudiante.TelefonoEst" />
+        </div>
+
+
+        <button class="btn btn-success" @onclick="Guardar">
+            Guardar
+        </button>
+
+
+        <button class="btn btn-secondary" @onclick="Cerrar">
+            Cancelar
+        </button>
+
+    </div>
+}
+
+
+
+<table class="table table-striped">
+
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Cédula</th>
+            <th>Correo</th>
+            <th>Edad</th>
+            <th>Teléfono</th>
+        </tr>
+    </thead>
+
+
+    <tbody>
+
+        @foreach(var estudiante in estudiantes)
+        {
+            <tr>
+
+                <td>@estudiante.IDEst</td>
+
+                <td>@estudiante.NombreEst</td>
+
+                <td>@estudiante.CedulaEst</td>
+
+                <td>@estudiante.CorreoEst</td>
+
+                <td>@estudiante.EdadEst</td>
+
+                <td>@estudiante.TelefonoEst</td>
+
+            </tr>
+        }
+
+    </tbody>
+
+</table>
+
+
+
+@code {
+
+    private List<Estudiantes> estudiantes = new();
+
+
+    private Estudiantes nuevoEstudiante = new();
+
+
+    private bool mostrarFormulario = false;
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        estudiantes = await Service.GetAll();
+    }
+
+
+
+    private void Nuevo()
+    {
+        nuevoEstudiante = new Estudiantes();
+
+        mostrarFormulario = true;
+    }
+
+
+
+    private void Cerrar()
+    {
+        mostrarFormulario = false;
+    }
+
+
+
+    private async Task Guardar()
+    {
+        Console.WriteLine("BOTON GUARDAR PRESIONADO");
+
+        await Service.Create(nuevoEstudiante);
+
+        estudiantes = await Service.GetAll();
+
+        mostrarFormulario = false;
+    }
+
+}

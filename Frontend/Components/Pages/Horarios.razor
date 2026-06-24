@@ -1,0 +1,88 @@
+@page "/Horarios"
+
+@using Frontend.Models
+@using Frontend.Services
+
+@inject HorariosService horariosService
+@inject ReservasService reservasService
+@rendermode InteractiveServer
+
+<h3>Horarios Disponibles</h3>
+
+@if (horarios == null)
+{
+    <p>Cargando...</p>
+}
+else
+{
+    <table class="table">
+
+        <thead>
+        <tr>
+            <th>Ruta</th>
+            <th>Hora</th>
+            <th>Chofer</th>
+            <th>Cupos</th>
+            <th></th>
+        </tr>
+        </thead>
+
+        <tbody>
+
+        @foreach (var horario in horarios)
+        {
+            <tr>
+                <td>@horario.Recorrido</td>
+                <td>@horario.HoraSalida</td>
+                <td>@horario.NombreChofer</td>
+                <td>@horario.CuposIniciales</td>
+
+                <td>
+                    <button class="btn btn-success"
+                            @onclick="() => Reservar(horario)">
+                        Reservar
+                    </button>
+                </td>
+            </tr>
+        }
+
+        </tbody>
+
+    </table>
+}
+
+@code {
+
+    private List<HorarioDTO>? horarios;
+
+    protected override async Task OnInitializedAsync()
+    {
+        horarios = await horariosService.GetAll();
+    }
+
+    private async Task Reservar(HorarioDTO horario)
+    {
+        try
+        {
+            Console.WriteLine("Botón pulsado");
+
+            var reserva = new Reservas
+            {
+                EstudianteId = 1,
+                RutaId = horario.RutaId,
+                HorarioId = horario.IDHorarios,
+                ChoferId = horario.ChoferId,
+                Fecha = DateTime.Now,
+                Estado = EstadoReserva.PENDIENTE
+            };
+
+            await reservasService.Crear(reserva);
+
+            Console.WriteLine("Reserva creada correctamente");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
+        }
+    }
+}

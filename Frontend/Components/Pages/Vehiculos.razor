@@ -1,0 +1,75 @@
+@page "/Vehiculo"
+@rendermode InteractiveServer
+
+@using Frontend.Services
+@using Backend.Models
+
+@inject VehiculosService Service
+
+
+<h3>Vehículos</h3>
+
+
+<table class="table table-striped">
+
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Tipo</th>
+        <th>Placa</th>
+        <th>Capacidad</th>
+        <th>Chofer Asignado</th>
+        <th>Estado</th>
+    </tr>
+    </thead>
+
+
+    <tbody>
+
+    @foreach(var vehiculo in vehiculos)
+    {
+        <tr>
+
+            <td>
+                @vehiculo.IDVehiculos
+            </td>
+
+            <td>
+                @vehiculo.TipoVehiculo
+            </td>
+
+            <td>
+                @vehiculo.PlacaVehiculo
+            </td>
+
+            <td>
+                @vehiculo.CapacidadVehiculo
+            </td>
+
+            <td>
+                @vehiculo.ChoferAsignadoId
+            </td>
+
+            <td>
+                @(vehiculo.EstadoVehiculo ? "Activo" : "Inactivo")
+            </td>
+
+        </tr>
+    }
+
+    </tbody>
+
+</table>
+
+
+@code {
+
+    private List<Backend.Models.Vehiculos> vehiculos = new();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        vehiculos = await Service.GetAll();
+    }
+
+}

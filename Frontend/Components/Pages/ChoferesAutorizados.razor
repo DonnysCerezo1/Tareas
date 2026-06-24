@@ -1,0 +1,63 @@
+@page "/ChoferesAutorizados"
+@rendermode InteractiveServer
+
+@using Frontend.Services
+@using Backend.Models
+
+@inject ChoferesAutorizadosService Service
+
+
+<h3>Choferes</h3>
+
+
+<table class="table table-striped">
+
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Teléfono</th>
+        <th>Cupos</th>
+        <th>Estado</th>
+    </tr>
+    </thead>
+
+
+    <tbody>
+
+    @foreach(var chofer in choferes)
+    {
+        <tr>
+
+            <td>@chofer.IDChofer</td>
+
+            <td>@chofer.NombreChofer</td>
+
+            <td>@chofer.TelefonoChofer</td>
+
+            <td>@chofer.Cupos</td>
+
+            <td>
+                @(chofer.EstadoChofer ? "Activo" : "Inactivo")
+            </td>
+
+        </tr>
+    }
+
+    </tbody>
+
+</table>
+
+
+
+@code {
+
+    private List<Backend.Models.ChoferesAutorizados> choferes = new();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        choferes = await Service.GetAll();
+    }
+
+}

@@ -24,6 +24,7 @@ public class AppDbContext : DbContext
     public DbSet<Usuarios> Usuarios { get; set; } = null!;
     public DbSet<Reservas> Reservas { get; set; } = null!;
     public DbSet<RutaAristas> RutaAristas { get; set; } = null!;
+    
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

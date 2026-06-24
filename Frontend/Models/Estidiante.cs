@@ -1,6 +1,6 @@
-namespace Frontend.Components.Models;
+namespace Frontend.Models;
 
-public class Estudiantes
+public class Estudiante
 {
     public int IDEst { get; set; }
 
